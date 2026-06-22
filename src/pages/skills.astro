@@ -1,0 +1,85 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import Section from "../components/Section.astro";
+import Skills from "../components/Skills.astro";
+
+const filters = [
+  { label: "all", value: "all" },
+  { label: "ai", value: "ai" },
+  { label: "software", value: "softwaredev" },
+  { label: "web", value: "webdev" },
+];
+---
+<BaseLayout title="Skills — Sebastian Morkel">
+  <Header />
+  <Section title="Skills">
+    <div class="filters" role="group" aria-label="Filter skills by discipline">
+      {filters.map((f) => (
+        <button
+          class="filters__btn"
+          type="button"
+          data-filter={f.value}
+          aria-pressed={f.value === "all" ? "true" : "false"}
+        >{f.label}</button>
+      ))}
+    </div>
+
+    <div id="skills-root">
+      <Skills />
+    </div>
+  </Section>
+  <Footer />
+</BaseLayout>
+
+<style>
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-bottom: var(--space-6);
+  }
+  .filters__btn {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    padding: var(--space-2) var(--space-4);
+    background: transparent;
+    color: var(--color-muted);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: color var(--transition), border-color var(--transition);
+  }
+  .filters__btn:hover { color: var(--color-fg); border-color: var(--color-fg); }
+  .filters__btn[aria-pressed="true"] {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+</style>
+
+<script>
+  const root = document.getElementById("skills-root");
+  const buttons = document.querySelectorAll<HTMLButtonElement>(".filters__btn");
+
+  function applyFilter(value: string) {
+    if (!root) return;
+    // show/hide each skill by its data-disciplines
+    root.querySelectorAll<HTMLElement>("li[data-disciplines]").forEach((li) => {
+      const tags = (li.dataset.disciplines ?? "").split(" ");
+      li.hidden = !(value === "all" || tags.includes(value));
+    });
+    // hide any category group with no visible skills
+    root.querySelectorAll<HTMLElement>(".skills__group").forEach((group) => {
+      group.hidden = !group.querySelector("li:not([hidden])");
+    });
+    // reflect the active button
+    buttons.forEach((b) =>
+      b.setAttribute("aria-pressed", String(b.dataset.filter === value))
+    );
+  }
+
+  buttons.forEach((b) =>
+    b.addEventListener("click", () => applyFilter(b.dataset.filter ?? "all"))
+  );
+</script>

@@ -1,0 +1,82 @@
+---
+import Tag from "./Tag.astro";
+import { getCollection } from "astro:content";
+import { getSkillsByDiscipline } from "../lib/skills";
+
+type Discipline = "ai" | "softwaredev" | "webdev" | "quant";
+
+interface SkillData {
+  name: string;
+  category: string;
+  disciplines: Discipline[];
+  level?: string;
+}
+
+interface Props {
+  /** Render only this discipline's skills (via getSkillsByDiscipline). */
+  discipline?: Discipline;
+  /** Or pass an explicit list (wins over `discipline`). */
+  skills?: SkillData[];
+  /** Optional section heading. */
+  heading?: string;
+}
+
+const { discipline, skills, heading } = Astro.props;
+
+// Normalize: helpers/getCollection may hand back collection entries ({ data })
+// or plain data objects — accept either.
+const toData = (items: any[]): SkillData[] =>
+  items.map((it) => (it && typeof it === "object" && "data" in it ? it.data : it));
+
+let list: SkillData[];
+if (skills) {
+  list = skills;
+} else if (discipline) {
+  list = toData(await getSkillsByDiscipline(discipline));
+} else {
+  list = toData(await getCollection("skills"));
+}
+
+// Group by category, preserving first-seen order.
+const byCategory = new Map<string, SkillData[]>();
+for (const skill of list) {
+  byCategory.set(skill.category, [...(byCategory.get(skill.category) ?? []), skill]);
+}
+const categories = [...byCategory.entries()];
+---
+{categories.length > 0 && (
+  <div class="skills">
+    {heading && <h3 class="skills__heading">{heading}</h3>}
+    {categories.map(([category, items]) => (
+      <div class="skills__group">
+        <p class="skills__category">{category}</p>
+        <ul class="skills__list" role="list">
+          {items.map((s) => (
+            <li data-disciplines={s.disciplines.join(" ")}><Tag>{s.name}</Tag></li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+)}
+
+<style>
+  .skills { display: flex; flex-direction: column; gap: var(--space-5); }
+  .skills__heading { margin: 0 0 var(--space-2); }
+  .skills__group { display: flex; flex-direction: column; gap: var(--space-2); }
+  .skills__category {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .skills__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+</style>

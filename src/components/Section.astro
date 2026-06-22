@@ -1,0 +1,25 @@
+---
+interface Props {
+  title?: string;
+  id?: string;
+  width?: "default" | "full";
+}
+const { title, id, width = "default" } = Astro.props;
+---
+<section id={id} class="section">
+  <div class:list={["section__inner", width === "full" && "section__inner--full"]}>
+    {title && <h2 class="section__title">{title}</h2>}
+    <slot />
+  </div>
+</section>
+
+<style>
+  .section { padding-block: var(--space-10); }
+  .section__inner {
+    max-width: var(--content-max);
+    margin-inline: auto;
+    padding-inline: var(--space-5);
+  }
+  .section__inner--full { max-width: none; }
+  .section__title { margin-bottom: var(--space-6); }
+</style>

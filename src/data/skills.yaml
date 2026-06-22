@@ -23,6 +23,41 @@
   category: Languages
   disciplines: [ai,softwaredev,webdev]
   level: proficient  
+- id: html5
+  name: HTML5 
+  category: Languages
+  disciplines: [softwaredev,webdev]
+  level: advanced  
+- id: css3
+  name: CSS3 
+  category: Languages
+  disciplines: [softwaredev,webdev]
+  level: advanced
+- id: tailwindcss
+  name: Tailwind CSS 
+  category: Frameworks
+  disciplines: [softwaredev,webdev]
+  level: proficient
+- id: nextjs
+  name: Next.js 
+  category: Frameworks
+  disciplines: [softwaredev,webdev]
+  level: advanced 
+- id: nodejs
+  name: Node.js 
+  category: Environments
+  disciplines: [softwaredev,webdev]
+  level: advanced 
+- id: fastapi
+  name: FastAPI
+  category: Frameworks
+  disciplines: [softwaredev,webdev,ai]
+  level: advanced 
+- id: supabase
+  name: Supabase
+  category: Tools
+  disciplines: [softwaredev,webdev,ai]
+  level: advanced 
 - id: astro
   name: Astro
   category: Frameworks

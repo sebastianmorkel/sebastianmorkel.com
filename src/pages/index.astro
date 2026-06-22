@@ -1,31 +1,108 @@
 ---
-// Placeholder home — Phase 0 skeleton. Real terminal/editorial design lands in Phase 2.
-const name = "Sebastian Morkel";
----
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import Section from "../components/Section.astro";
+import Link from "../components/Link.astro";
+import Skills from "../components/Skills.astro";
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Sebastian Morkel — coming soon</title>
-    <style>
-      :root { color-scheme: dark; }
-      body {
-        margin: 0; min-height: 100dvh; display: grid; place-items: center;
-        background: #0a0a0a; color: #e6e6e6;
-        font: 16px/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      }
-      main { text-align: center; padding: 2rem; }
-      .prompt { color: #4ade80; margin: 0; }
-      h1 { font-size: clamp(1.5rem, 5vw, 2.5rem); margin: .25rem 0; font-weight: 600; }
-      p.tag { color: #9ca3af; margin: 0; }
-    </style>
-  </head>
-  <body>
-    <main>
-      <p class="prompt">$ whoami</p>
-      <h1>{name}</h1>
-      <p class="tag">portfolio coming soon</p>
-    </main>
-  </body>
-</html>
+// Auto-detect an optional headshot at src/assets/headshot.{jpg,jpeg,png,webp}.
+// If none is committed yet, we render a styled placeholder.
+const headshots = import.meta.glob<{ default: ImageMetadata }>(
+  "../assets/headshot.{jpg,jpeg,png,webp}",
+  { eager: true }
+);
+const headshot = Object.values(headshots)[0]?.default;
+
+// My profile URLS.
+const profiles = [
+  { label: "GitHub",   href: "https://github.com/sebastianmorkel" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/sebastianmorkel" },
+  { label: "Email",    href: "mailto:morkel082@gmail.com" },
+];
+---
+<BaseLayout title="Sebastian Morkel - Software · Web · AI/ML">
+  <Header />
+
+  <Section>
+    <div class="hero">
+      <div class="hero__media">
+        {headshot ? (
+          <img
+            class="hero__img"
+            src={headshot.src}
+            width={headshot.width}
+            height={headshot.height}
+            alt="Sebastian Morkel"
+          />
+        ) : (
+          <div class="hero__placeholder" aria-hidden="true">SM</div>
+        )}
+      </div>
+
+      <div class="hero__body">
+        <p class="hero__prompt">$ whoami</p>
+        <h1 class="hero__name">Sebastian Morkel</h1>
+        <p class="hero__tagline">Software developer · web · AI/ML</p>
+        <p class="hero__blurb">
+          I build practical software across the stack! From full web apps to AI-driven
+          tools. This is where my projects, skills, and writing live.
+        </p>
+        <nav class="hero__links" aria-label="Profiles">
+          {profiles.map((p) => <Link href={p.href}>{p.label}</Link>)}
+        </nav>
+      </div>
+    </div>
+  </Section>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .hero {
+    display: flex;
+    gap: var(--space-8);
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .hero__media { flex: 0 0 auto; }
+  .hero__img,
+  .hero__placeholder {
+    width: 160px;
+    height: 160px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    object-fit: cover;
+    /* springy easing — overshoots a touch for the "boing" */
+    transition: transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1),
+      box-shadow 260ms ease;
+  }
+  /* hover the whole media slot so it works for image OR placeholder */
+  .hero__media:hover .hero__img,
+  .hero__media:hover .hero__placeholder {
+    transform: translateY(-8px) rotate(-4deg);
+    box-shadow: var(--shadow-glow);
+  }
+  /* respect users who ask for less motion */
+  @media (prefers-reduced-motion: reduce) {
+    .hero__img,
+    .hero__placeholder { transition: none; }
+    .hero__media:hover .hero__img,
+    .hero__media:hover .hero__placeholder { transform: none; }
+  }
+  .hero__placeholder {
+    display: grid;
+    place-items: center;
+    background: var(--color-surface);
+    color: var(--color-muted);
+    font-family: var(--font-heading);
+    font-size: var(--text-3xl);
+    text-shadow: var(--shadow-glow);
+  }
+  .hero__body { flex: 1 1 18rem; }
+  .hero__prompt { margin: 0 0 var(--space-2); color: var(--color-accent); font-size: var(--text-sm); }
+  .hero__name { margin: 0 0 var(--space-2); }
+  .hero__tagline { margin: 0 0 var(--space-4); color: var(--color-muted); }
+  .hero__blurb { max-width: 46ch; }
+  .hero__links { display: flex; gap: var(--space-5); margin-top: var(--space-5); }
+</style>

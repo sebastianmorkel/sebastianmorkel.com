@@ -1,0 +1,17 @@
+---
+interface Props { href: string; external?: boolean; }
+const { href, external } = Astro.props;
+const isExternal = external ?? /^https?:\/\//.test(href);
+---
+<a
+  class="link"
+  href={href}
+  target={isExternal ? "_blank" : undefined}
+  rel={isExternal ? "noopener noreferrer" : undefined}
+><slot />{isExternal && <span class="link__ext" aria-hidden="true">↗</span>}</a>
+
+<style>
+  .link { color: var(--color-accent); text-decoration: underline; text-underline-offset: 2px; }
+  .link:hover { text-decoration: none; }
+  .link__ext { font-size: 0.85em; margin-left: 0.15em; }
+</style>

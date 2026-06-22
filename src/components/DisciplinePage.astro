@@ -1,0 +1,83 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "./Header.astro";
+import Footer from "./Footer.astro";
+import Section from "./Section.astro";
+import ProjectCard from "./ProjectCard.astro";
+import Skills from "./Skills.astro";
+import { getCollection } from "astro:content";
+
+type Discipline = "ai" | "softwaredev" | "webdev" | "quant";
+
+interface Props {
+  discipline: Discipline;
+  title: string;
+  intro: string;
+  accent: string;
+}
+
+const { discipline, title, intro, accent } = Astro.props;
+
+const all = await getCollection("projects");
+const tagged = all.filter((e) => e.data.disciplines.includes(discipline));
+const live = tagged.filter((e) => e.data.status === "live");
+const inDev = tagged.filter((e) => e.data.status !== "live"); // in-development and planned tags
+---
+<BaseLayout title={`${title} — Sebastian Morkel`} theme="terminal" accent={accent}>
+  <Header />
+
+  <Section title={title}>
+    <p class="intro">{intro}</p>
+  </Section>
+
+  <Section title="Projects">
+    {live.length > 0 ? (
+      <div class="grid">
+        {live.map((e) => (
+          <ProjectCard
+            title={e.data.title}
+            summary={e.data.summary}
+            disciplines={e.data.disciplines}
+            status={e.data.status}
+            href={`/projects/${e.id}`}
+            featured={e.data.featured}
+          />
+        ))}
+      </div>
+    ) : (
+      <p class="empty">No live projects here yet.</p>
+    )}
+  </Section>
+
+  {inDev.length > 0 && (
+    <Section title="In development">
+      <div class="grid">
+        {inDev.map((e) => (
+          <ProjectCard
+            title={e.data.title}
+            summary={e.data.summary}
+            disciplines={e.data.disciplines}
+            status={e.data.status}
+            href={`/projects/${e.id}`}
+          />
+        ))}
+      </div>
+    </Section>
+  )}
+
+  <Section title="Skills">
+    <Skills discipline={discipline} />
+  </Section>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .intro { max-width: 60ch; color: var(--color-muted); }
+  .empty { color: var(--color-muted); }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr));
+    gap: var(--space-4);
+  }
+</style>

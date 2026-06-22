@@ -1,0 +1,141 @@
+/* =================================================================
+   global.css design tokens + theme palettes
+   One token system, two looks. Themes swap via the [data-theme]
+   attribute selector (NOT :root[data-theme]) so a nested wrapper
+   can re-skin. That's what lets /styleguide show both at once.
+   ================================================================= */
+
+/* ---------- Base tokens (theme-independent) ---------- */
+:root {
+    /* Font stacks */
+    --font-mono: "JetBrains Mono Variable", "JetBrains Mono", "SF Mono",
+        "Cascadia Code", "Fira Code", ui-monospace, "Courier New", monospace;
+    --font-sans: "Inter Variable", "Inter", ui-sans-serif, system-ui,
+        -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+    /* Type scale (1.250 — major third) */
+    --text-xs:   0.8rem;
+    --text-sm:   0.9rem;
+    --text-base: 1rem;
+    --text-lg:   1.25rem;
+    --text-xl:   1.563rem;
+    --text-2xl:  1.953rem;
+    --text-3xl:  2.441rem;
+    --text-4xl:  3.052rem;
+
+    --leading-tight: 1.2;
+    --leading-normal: 1.6;
+
+    --weight-normal: 400;
+    --weight-medium: 500;
+    --weight-bold: 700;
+
+    /* Spacing scale (0.25rem base) */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.5rem;
+    --space-6: 2rem;
+    --space-8: 3rem;
+    --space-10: 4rem;
+    --space-12: 6rem;
+
+    /* Radii */
+    --radius-sm: 2px;
+    --radius-md: 4px;
+    --radius-lg: 8px;
+
+    /* Layout */
+    --content-max: 72rem;
+    --transition: 150ms ease;
+
+    /* Per-theme fonts (overridden below; default = terminal) */
+    --font-body: var(--font-mono);
+    --font-heading: var(--font-mono);
+}
+
+/* ---------- Terminal palette. Amber CRT ---------- */
+[data-theme="terminal"] {
+    --font-body: var(--font-mono);
+    --font-heading: var(--font-mono);
+
+    --color-bg:      #0a0a0a;  /* near-black */
+    --color-surface: #141210;  /* warm raised panel */
+    --color-fg:      #ffc14d;  /* softened amber body */
+    --color-muted:   #b3893f;  /* dimmer amber */
+    --color-accent:  #ffcf66;  /* punchier amber (per-page overridable) */
+    --color-border:  rgba(255, 193, 77, 0.18); /* faint amber hairline */
+    --color-glow:    rgba(255, 193, 77, 0.35); /* CRT glow */
+
+    --shadow-glow: 0 0 8px var(--color-glow);
+}
+
+/* ---------- Editorial palette. Clean light ---------- */
+[data-theme="editorial"] {
+    --font-body: var(--font-sans);
+    --font-heading: var(--font-sans);
+
+    --color-bg:      #fafaf8;  /* off-white */
+    --color-surface: #ffffff;
+    --color-fg:      #1a1a1a;  /* near-black */
+    --color-muted:   #6b7280;  /* grey */
+    --color-accent:  #b45309;  /* restrained warm accent */
+    --color-border:  #e5e3df;  /* hairline */
+    --color-glow:    transparent;
+
+    --shadow-glow: none;
+}
+
+/* ---------- Reset + base element styling (token-driven) ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+    background: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-body);
+    font-size: 100%;
+    line-height: var(--leading-normal);
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--color-bg);
+    color: var(--color-fg);
+    font-size: var(--text-base);
+    transition: background var(--transition), color var(--transition);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0 0 var(--space-4);
+    font-family: var(--font-heading);
+    font-weight: var(--weight-bold);
+    line-height: var(--leading-tight);
+    text-shadow: var(--shadow-glow);
+}
+
+h1 { font-size: var(--text-3xl); }
+h2 { font-size: var(--text-2xl); }
+h3 { font-size: var(--text-xl); }
+
+p { margin: 0 0 var(--space-4); }
+
+a {
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: color var(--transition);
+}
+a:hover { text-decoration: underline; }
+
+:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+img { max-width: 100%; height: auto; display: block; }

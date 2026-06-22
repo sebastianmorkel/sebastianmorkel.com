@@ -1,0 +1,111 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import Section from "../../components/Section.astro";
+import Tag from "../../components/Tag.astro";
+import Link from "../../components/Link.astro";
+import { getCollection, render } from "astro:content";
+
+export async function getStaticPaths() {
+  const projects = await getCollection("projects");
+  return projects.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+// Content Layer API (NOT the deprecated entry.render()). Empty body -> renders nothing.
+const { Content } = await render(entry);
+
+const { title, summary, disciplines, status } = entry.data;
+const statusLabel = status.replace("-", " ");
+
+// Back-links only to disciplines that have a route (quant is deferred so no /quant yet).
+const disciplineMeta: Record<string, { label: string; href: string }> = {
+  ai: { label: "AI / ML", href: "/ai" },
+  softwaredev: { label: "Software Development", href: "/softwaredev" },
+  webdev: { label: "Web Development", href: "/webdev" },
+};
+const backLinks = disciplines
+  .filter((d) => d in disciplineMeta)
+  .map((d) => disciplineMeta[d]);
+---
+<BaseLayout title={`${title} — Sebastian Morkel`} theme="terminal">
+  <Header />
+
+  <Section>
+    <p class="crumbs"><a href="/">home</a> / <span>{title}</span></p>
+
+    <div class="head">
+      <h1 class="head__title">{title}</h1>
+      <Tag variant="status" status={status}>{statusLabel}</Tag>
+    </div>
+
+    <p class="summary">{summary}</p>
+
+    <div class="tags">
+      {disciplines.map((d) => <Tag>{d}</Tag>)}
+    </div>
+
+    {/* Demo slot — filled in Phase 4 */}
+    <div class="demo-slot" data-demo-slot>
+      <p class="demo-slot__label">▶ Demo coming soon</p>
+    </div>
+
+    {/* Full writeup (markdown body). If empty, this renders nothing. */}
+    <div class="writeup">
+      <Content />
+    </div>
+
+    {backLinks.length > 0 && (
+      <p class="backlinks">
+        Explore more in {backLinks.map((b, i) => (
+          <Fragment>
+            {i > 0 && <span> · </span>}
+            <Link href={b.href}>{b.label}</Link>
+          </Fragment>
+        ))}
+      </p>
+    )}
+  </Section>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .crumbs { margin-bottom: var(--space-5); color: var(--color-muted); font-size: var(--text-sm); }
+  .crumbs a { color: var(--color-muted); }
+  .crumbs a:hover { color: var(--color-accent); }
+  .head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+  .head__title { margin: 0; }
+  .summary { margin-top: var(--space-3); max-width: 60ch; color: var(--color-muted); }
+  .tags { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-block: var(--space-4); }
+  .demo-slot {
+    margin-block: var(--space-6);
+    padding: var(--space-8);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-lg);
+    text-align: center;
+  }
+  .demo-slot__label { margin: 0; color: var(--color-muted); }
+  .writeup { max-width: 70ch; }
+  /* light prose styling for the markdown body */
+  .writeup :global(h2) { margin-top: var(--space-6); }
+  .writeup :global(ul),
+  .writeup :global(ol) { padding-left: var(--space-5); }
+  .writeup :global(code) {
+    font-family: var(--font-mono);
+    background: var(--color-surface);
+    padding: 0 var(--space-1);
+    border-radius: var(--radius-sm);
+  }
+  .backlinks { margin-top: var(--space-8); color: var(--color-muted); }
+</style>

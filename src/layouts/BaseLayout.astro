@@ -1,0 +1,42 @@
+---
+import "../styles/global.css";
+import "@fontsource-variable/jetbrains-mono";
+import "@fontsource-variable/inter";
+
+interface Props {
+    title?: string;
+    description?: string;
+    theme?: "terminal" | "editorial";
+    /** Per-page accent override (any CSS color). Recolors only accent elements. */
+    accent?: string;
+    /** Emit <meta name="robots" content="noindex"> for dev-only pages. */
+    noindex?: boolean;
+}
+
+const {
+    title = "Sebastian Morkel",
+    description = "Portfolio of Sebastian Morkel - software, web, AI/ML.",
+    theme = "terminal",
+    accent,
+    noindex = false,
+} = Astro.props;
+---
+
+<!doctype html>
+<html
+    lang="en"
+    data-theme={theme}
+    style={accent ? `--color-accent: ${accent}` : undefined}
+>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content={description} />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <title>{title}</title>
+        {noindex && <meta name="robots" content="noindex" />}
+    </head>
+    <body>
+        <slot />
+    </body>
+</html>
