@@ -1,0 +1,45 @@
+- id: typescript
+  name: TypeScript
+  category: Languages
+  disciplines: [softwaredev, webdev]
+  level: advanced
+- id: python
+  name: Python
+  category: Languages
+  disciplines: [ai, softwaredev, quant]
+  level: advanced
+- id: java
+  name: java
+  category: Languages
+  disciplines: [softwaredev]
+  level: proficient
+- id: javascript
+  name: JavaScript
+  category: Languages
+  disciplines: [softwaredev,webdev]
+  level: proficient
+- id: sql
+  name: SQL
+  category: Languages
+  disciplines: [ai,softwaredev,webdev]
+  level: proficient  
+- id: astro
+  name: Astro
+  category: Frameworks
+  disciplines: [webdev]
+  level: proficient
+- id: react
+  name: React
+  category: Frameworks
+  disciplines: [webdev, softwaredev]
+  level: proficient
+- id: git
+  name: Git
+  category: Tools
+  disciplines: [softwaredev, webdev, ai, quant]
+  level: advanced
+- id: llm-prompting
+  name: LLM Prompt Engineering
+  category: Concepts
+  disciplines: [ai]
+  level: proficient
