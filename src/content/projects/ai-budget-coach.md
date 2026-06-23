@@ -8,6 +8,8 @@ links:
   github: https://github.com/sebastianmorkel/ai-budget-coach
 demo:
   mode: recorded
+  video: /demo/coach.mp4
+  poster: /demo/coach.jpg
 featured: true
 ---
 

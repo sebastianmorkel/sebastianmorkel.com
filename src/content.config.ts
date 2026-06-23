@@ -19,10 +19,26 @@ export const projectSchema = z.object({
     media: z.array(z.string()).optional(),           // image/asset paths
     demo: z
         .object({
-        mode: z.enum(["embed", "link", "recorded", "none"]),
-        url: z.string().url().optional(),
+            mode: z.enum(["embed", "link", "recorded", "none"]),
+            embedUrl: z.string().url().optional(), // iframe src for `embed`
+            url: z.string().url().optional(),      // open-full-app / `link` target
+            video: z.string().optional(),          // recorded walkthrough, e.g. "/demo/coach.mp4"
+            poster: z.string().optional(),         // screenshot, e.g. "/demo/coach.jpg"
         })
-        .default({ mode: "none" }),
+        .default({ mode: "none" })
+        // mode/data consistency — a mismatch FAILS the build (protects future entries)
+        .refine((d) => d.mode !== "recorded" || !!d.video, {
+            message: "demo.mode 'recorded' requires `video`",
+            path: ["video"],
+        })
+        .refine((d) => d.mode !== "embed" || !!d.embedUrl, {
+            message: "demo.mode 'embed' requires `embedUrl`",
+            path: ["embedUrl"],
+        })
+        .refine((d) => d.mode !== "link" || !!d.url, {
+            message: "demo.mode 'link' requires `url`",
+            path: ["url"],
+        }),
     featured: z.boolean().default(false),
 });
 

@@ -1,0 +1,106 @@
+---
+import Button from "./Button.astro";
+import Link from "./Link.astro";
+
+type DemoMode = "embed" | "link" | "recorded" | "none";
+
+interface Demo {
+  mode: DemoMode;
+  embedUrl?: string;
+  url?: string;
+  video?: string;
+  poster?: string;
+}
+
+interface Props {
+  demo: Demo;
+}
+
+const { demo } = Astro.props;
+const { mode, embedUrl, url, video, poster } = demo;
+
+// embed: the open-full-app link is always present; href falls back to embedUrl.
+const appHref = url ?? embedUrl;
+---
+{mode === "embed" && (
+  <div class="demo">
+    <div class="demo__frame">
+      <iframe
+        class="demo__media"
+        src={embedUrl}
+        title="Live demo"
+        loading="lazy"
+        sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+      ></iframe>
+    </div>
+    {appHref && (
+      <p class="demo__actions">
+        <Button href={appHref}>Open full app ↗</Button>
+      </p>
+    )}
+  </div>
+)}
+
+{mode === "link" && url && (
+  <div class="demo">
+    <p class="demo__actions">
+      <Button href={url}>Open full app ↗</Button>
+    </p>
+  </div>
+)}
+
+{mode === "recorded" && (
+  <div class="demo">
+    <div class="demo__frame">
+      <video
+        class="demo__media"
+        src={video}
+        poster={poster}
+        controls
+        playsinline
+        preload="metadata"
+      ></video>
+    </div>
+    {url && (
+      <p class="demo__actions">
+        <Link href={url}>Open full app</Link>
+      </p>
+    )}
+  </div>
+)}
+
+{mode === "none" && (
+  <div class="demo demo--placeholder">
+    <p class="demo__label">▶ Demo coming soon</p>
+  </div>
+)}
+
+<style>
+  .demo { margin-block: var(--space-6); }
+  .demo__frame {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--color-surface);
+  }
+  .demo__media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+    object-fit: contain;
+  }
+  .demo__actions { margin-top: var(--space-4); }
+  .demo--placeholder {
+    padding: var(--space-8);
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-lg);
+    text-align: center;
+  }
+  .demo__label { margin: 0; color: var(--color-muted); }
+</style>

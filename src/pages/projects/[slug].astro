@@ -6,6 +6,7 @@ import Section from "../../components/Section.astro";
 import Tag from "../../components/Tag.astro";
 import Link from "../../components/Link.astro";
 import { getCollection, render } from "astro:content";
+import ProjectDemo from "../../components/ProjectDemo.astro";
 
 export async function getStaticPaths() {
   const projects = await getCollection("projects");
@@ -49,10 +50,8 @@ const backLinks = disciplines
       {disciplines.map((d) => <Tag>{d}</Tag>)}
     </div>
 
-    {/* Demo slot — filled in Phase 4 */}
-    <div class="demo-slot" data-demo-slot>
-      <p class="demo-slot__label">▶ Demo coming soon</p>
-    </div>
+    {/* Demo — rendered by the entry's declared mode */}
+    <ProjectDemo demo={entry.data.demo} />
 
     {/* Full writeup (markdown body). If empty, this renders nothing. */}
     <div class="writeup">
@@ -88,14 +87,6 @@ const backLinks = disciplines
   .head__title { margin: 0; }
   .summary { margin-top: var(--space-3); max-width: 60ch; color: var(--color-muted); }
   .tags { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-block: var(--space-4); }
-  .demo-slot {
-    margin-block: var(--space-6);
-    padding: var(--space-8);
-    border: 1px dashed var(--color-border);
-    border-radius: var(--radius-lg);
-    text-align: center;
-  }
-  .demo-slot__label { margin: 0; color: var(--color-muted); }
   .writeup { max-width: 70ch; }
   /* light prose styling for the markdown body */
   .writeup :global(h2) { margin-top: var(--space-6); }
