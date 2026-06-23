@@ -11,6 +11,8 @@ interface Props {
     accent?: string;
     /** Emit <meta name="robots" content="noindex"> for dev-only pages. */
     noindex?: boolean;
+    /** Absolute or root-relative OG image (default /og.png). */
+    image?: string;    
 }
 
 const {
@@ -19,7 +21,10 @@ const {
     theme = "terminal",
     accent,
     noindex = false,
+    image
 } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL(image ?? "/og.jpg", Astro.site).href;
 ---
 
 <!doctype html>
@@ -35,6 +40,20 @@ const {
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <title>{title}</title>
         {noindex && <meta name="robots" content="noindex" />}
+            <link rel="canonical" href={canonical} />
+
+        <!-- Open Graph -->
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content={ogImage} />
+
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={ogImage} />
     </head>
     <body>
         <slot />
