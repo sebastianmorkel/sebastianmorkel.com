@@ -4,7 +4,11 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import Section from "../components/Section.astro";
 import Link from "../components/Link.astro";
-import Skills from "../components/Skills.astro";
+import { getCollection } from "astro:content";
+import ProjectCard from "../components/ProjectCard.astro";
+import SkillsMarquee from "../components/SkillsMarquee.astro";
+import Button from "../components/Button.astro";
+
 
 // Auto-detect an optional headshot at src/assets/headshot.{jpg,jpeg,png,webp}.
 // If none is committed yet, we render a styled placeholder.
@@ -20,6 +24,13 @@ const profiles = [
   { label: "LinkedIn", href: "https://www.linkedin.com/in/sebastianmorkel" },
   { label: "Email",    href: "mailto:morkel082@gmail.com" },
 ];
+
+const projects = (await getCollection("projects"))
+  .filter((e) => e.data.status === "live")
+  .sort((a, b) =>
+    Number(b.data.featured ?? false) - Number(a.data.featured ?? false) ||
+    +new Date(b.data.date) - +new Date(a.data.date)
+  );
 ---
 <BaseLayout title="Sebastian Morkel - Software · Web · AI/ML">
   <Header />
@@ -54,7 +65,22 @@ const profiles = [
       </div>
     </div>
   </Section>
+  <Section title="Projects">
+    <div class="home-projects">
+      {projects.map((e) => (
+        <ProjectCard
+          title={e.data.title}
+          summary={e.data.summary}
+          disciplines={e.data.disciplines}
+          status={e.data.status}
+          href={`/projects/${e.id}`}
+          featured={e.data.featured}
+        />
+      ))}
+    </div>
+  </Section>
 
+  <SkillsMarquee />
   <Footer />
 </BaseLayout>
 
@@ -105,4 +131,9 @@ const profiles = [
   .hero__tagline { margin: 0 0 var(--space-4); color: var(--color-muted); }
   .hero__blurb { max-width: 46ch; }
   .hero__links { display: flex; gap: var(--space-5); margin-top: var(--space-5); }
+  .home-projects {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr));
+    gap: var(--space-4);
+  }
 </style>

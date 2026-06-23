@@ -1,6 +1,6 @@
 ---
 title: AI Budget Coach
-summary: A full-stack personal budgeting web app that tracks your income and expenses and delivers AI-generated insights. 
+summary: A full-stack budgeting web app that turns income and expenses into interactive charts and AI-generated financial insights, with secure per-user data.
 date: 2026-06-18
 disciplines: [ai, softwaredev, webdev]
 status: live
@@ -13,9 +13,11 @@ demo:
 featured: true
 ---
 
-Next.js,TypeScript, Supabase (PostgreSQL), Google Gemini API
-github.com/sebastianmorkel/ai-buget-coach
-  •  Built a full-stack budgeting app where users track income and expenses, visualise spending with interactive charts, and receive AI-generated financial insights.
-  •  Integrated Google's Gemini API through a server-side route returning schema-constrained JSON, keeping the API key off the client and guaranteeing reliable, structured output.
-  •  Modelled the database in PostgreSQL and enforced per-user data isolation with row-level security policies, so each user can only access their own data.
-  •  Implemented email/password authentication, a saved-insight history, and savings-goal tracking; version-controlled with Git/GitHub.
+A full-stack budgeting app that pairs spending tracking with AI-generated financial insights.
+
+- Built a full-stack budgeting app in **Next.js** + **TypeScript** where users track income and expenses, visualise spending with interactive charts, and receive AI-generated financial insights.
+- Integrated **Google's Gemini API** through a server-side route returning schema-constrained JSON. Importantly keeping the API key off the client and guaranteeing reliable, structured output.
+- Modelled the database in **PostgreSQL** (with Supabase) and enforced per-user data isolation with **row-level security**, so each user only accesses their own data.
+- Implemented email/password authentication, saved-insight history, and savings-goal tracking; version-controlled with Git/GitHub.
+
+Source: [github.com/sebastianmorkel/ai-budget-coach](https://github.com/sebastianmorkel/ai-budget-coach)

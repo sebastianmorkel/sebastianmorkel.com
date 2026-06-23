@@ -1,0 +1,62 @@
+---
+import {
+  siPython, siTypescript, siJavascript, siReact, siNextdotjs, siAstro,
+  siTailwindcss, siPostgresql, siSupabase, siCloudflare, siGit, siGithub,
+} from "simple-icons";
+
+const skills = [
+  siPython, siTypescript, siJavascript, siReact, siNextdotjs, siAstro,
+  siTailwindcss, siPostgresql, siSupabase, siCloudflare, siGit, siGithub,
+];
+const track = [...skills, ...skills]; // doubled for a seamless loop
+---
+<div class="marquee" aria-label="Skills I work with">
+  <ul class="marquee__track" role="list">
+    {track.map((s) => (
+      <li class="marquee__item">
+        <svg class="marquee__icon" role="img" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d={s.path} />
+        </svg>
+        <span class="marquee__label">{s.title}</span>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<style>
+  .marquee {
+    overflow: hidden;
+    width: 100%;
+    padding-block: var(--space-4);
+    border-block: 1px solid var(--color-border);
+    -webkit-mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+    mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+  }
+  .marquee__track {
+    display: flex;
+    width: max-content;
+    margin: 0; padding: 0;
+    list-style: none;
+    animation: marquee 45s linear infinite;
+  }
+  .marquee:hover .marquee__track { animation-play-state: paused; }
+  .marquee__item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-inline-end: var(--space-8);
+    color: var(--color-muted);
+    transition: color var(--transition);
+  }
+  .marquee__item:hover { color: var(--color-accent); }
+  .marquee__icon { width: 1.4rem; height: 1.4rem; }
+  .marquee__label { font-size: var(--text-sm); white-space: nowrap; }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee__track { animation: none; flex-wrap: wrap; justify-content: center; row-gap: var(--space-3); }
+  }
+</style>
