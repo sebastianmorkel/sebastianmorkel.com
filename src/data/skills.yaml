@@ -78,3 +78,18 @@
   category: Concepts
   disciplines: [ai]
   level: proficient
+- name: REST APIs
+  category: Tools
+  disciplines: [webdev, softwaredev,ai]
+- name: PostgreSQL
+  category: Tools
+  disciplines: [softwaredev, webdev, ai]
+- name: Google Gemini API
+  category: Tools
+  disciplines: [ai, webdev]
+- name: Cloudflare Pages
+  category: Platforms
+  disciplines: [webdev]
+- name: Playwright
+  category: Tools
+  disciplines: [softwaredev, webdev]
