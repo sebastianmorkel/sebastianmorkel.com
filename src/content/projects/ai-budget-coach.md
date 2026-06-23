@@ -13,8 +13,9 @@ demo:
 featured: true
 ---
 
-A full-stack personal budgeting web app that tracks your income and expenses and delivers AI-generated insights. 
-Visualise where your money goes with recharts graphics and get on-demand analysis from Google's Gemini with every 
-analysis saved so you can revisit it.
-
-_(this is placeholder copy to refine.)_
+Next.js,TypeScript, Supabase (PostgreSQL), Google Gemini API
+github.com/sebastianmorkel/ai-buget-coach
+  •  Built a full-stack budgeting app where users track income and expenses, visualise spending with interactive charts, and receive AI-generated financial insights.
+  •  Integrated Google's Gemini API through a server-side route returning schema-constrained JSON, keeping the API key off the client and guaranteeing reliable, structured output.
+  •  Modelled the database in PostgreSQL and enforced per-user data isolation with row-level security policies, so each user can only access their own data.
+  •  Implemented email/password authentication, a saved-insight history, and savings-goal tracking; version-controlled with Git/GitHub.
