@@ -1,43 +1,69 @@
-# Astro Starter Kit: Minimal
+# sebastianmorkel.com
 
-```sh
-pnpm create astro@latest -- --template minimal
+My personal portfolio and skills hub. A fast and static site that gathers my work across my
+different disciplines (currently software/web dev and AI/ML, adding quant dev in the future)
+into one place. It comes with per-discipline views, a filterable skills section, and live 
+project demos.
+
+**Live link:** https://sebastianmorkel-com.pages.dev
+_(custom domain sebastianmorkel.com coming soon!)_
+
+## What it is
+
+Every project is authored once as a tagged Markdown file. The discipline pages (`/softwaredev`,
+`/webdev`, `/ai`) are filtered _views_ over that single source, so a project spanning several
+disciplines appears on each with no duplications. Skills also follow the same pattern one 
+tagged list for the `/skills` page (filterable by discipline) and as per-page slices.
+
+The design system ships two themes from one set of components: a signature **terminal** look
+(amber-on-black, monospace) for the home and dev/AI showcases, and a toned-down **editorial**
+look for the CV surfaces (and future quant dev) switched via a single `data-theme` attribute, 
+with a per-page accent.
+
+## Tech stack
+
+- **[Astro](https://astro.build)** — static site generation
+- **TypeScript** (strict)
+- **Content Collections** — type-safe, tagged project & skill data
+- **CSS custom properties** — design tokens + two switchable themes
+- **Vitest** — schema-guard & filter tests
+- **Cloudflare Pages** — hosting + CI (push to deploy from git)
+- **pnpm** — package manager
+
+## Local development
+
+```bash
+pnpm install
+pnpm dev        # dev server → http://localhost:4321
+pnpm build      # production build → dist/
+pnpm preview    # serve the production build locally
+pnpm test       # run the test suite
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+> Requires Node ≥ 22.12 and pnpm.
 
-## 🚀 Project Structure
+## Project structure
 
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```
+src/
+  pages/         # routes: home, /softwaredev /webdev /ai, /skills, /projects/[slug]
+  layouts/       # BaseLayout - theme + accent plumbing
+  components/    # token-driven UI (cards, tags, demo, skills, …)
+  content/       # projects/*.md + content.config.ts (Zod schemas)
+  data/          # skills.yaml
+  lib/           # discipline/status filter helpers
+  styles/        # global.css - design tokens + terminal/editorial palettes
+public/          # static assets (demo media, …)
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Adding content
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+- **A project:** drop a Markdown file in `src/content/projects/` with `disciplines`, a `status`
+  (`live` / `in-development` / `planned`), and an optional `demo` block. It appears automatically
+  on every discipline (page) that is tagged.
+- **A skill:** add an entry to `src/data/skills.yaml` with its `category` and `disciplines`.
 
-Any static assets, like images, can be placed in the `public/` directory.
+## Status
 
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+In active development. Discipline pages, skills, and project demos are live with per-discipline CVs
+and the custom-domain cutover being in progress.
