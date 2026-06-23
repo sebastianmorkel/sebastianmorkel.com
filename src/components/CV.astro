@@ -1,0 +1,116 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Skills from "./Skills.astro";
+import Button from "./Button.astro";
+import { getCollection } from "astro:content";
+
+type Discipline = "ai" | "softwaredev" | "webdev" | "quant";
+
+interface Props {
+  discipline: Discipline;
+  title: string;     // e.g. "Software Developer"
+  summary: string;
+}
+
+const { discipline, title, summary } = Astro.props;
+
+// Live projects for this discipline only (recruiter-facing = shipped work), newest first.
+const all = await getCollection("projects");
+const projects = all
+  .filter((e) => e.data.disciplines.includes(discipline) && e.data.status === "live")
+  .sort((a, b) => +new Date(b.data.date) - +new Date(a.data.date));
+
+// Contact = profile links only, no plaintext email.
+const profiles = [
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/sebastianmorkel" },
+  { label: "GitHub", href: "https://github.com/sebastianmorkel" },
+  { label: "sebastianmorkel.com", href: "https://sebastianmorkel.com" },
+];
+
+const pdfHref = `/cv/${discipline}.pdf`;
+---
+<BaseLayout title={`Sebastian Morkel — ${title} CV`} theme="editorial">
+  <article class="cv">
+    <header class="cv__header">
+      <div>
+        <h1 class="cv__name">Sebastian Morkel</h1>
+        <p class="cv__role">{title}</p>
+      </div>
+      <nav class="cv__contact" aria-label="Contact">
+        {profiles.map((p) => <a href={p.href}>{p.label}</a>)}
+      </nav>
+    </header>
+
+    <p class="cv__summary">{summary}</p>
+
+    <section class="cv__section">
+      <h2 class="cv__h2">Skills</h2>
+      <Skills discipline={discipline} />
+    </section>
+
+    <section class="cv__section">
+      <h2 class="cv__h2">Projects</h2>
+      <ul class="cv__projects" role="list">
+        {projects.map((e) => (
+          <li class="cv__project">
+            <div class="cv__project-head">
+              <h3 class="cv__project-title">{e.data.title}</h3>
+              <span class="cv__project-tags">{e.data.disciplines.join(" · ")}</span>
+            </div>
+            <p class="cv__project-summary">{e.data.summary}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <p class="cv__actions cv__no-print">
+      <Button href={pdfHref}>Download PDF ↓</Button>
+      <a class="cv__back" href={`/${discipline}`}>← back to {title}</a>
+    </p>
+  </article>
+</BaseLayout>
+
+<style>
+  .cv { max-width: 48rem; margin-inline: auto; padding: var(--space-8) var(--space-5); }
+  .cv__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: var(--space-4);
+  }
+  .cv__name { margin: 0; }
+  .cv__role { margin: var(--space-1) 0 0; color: var(--color-muted); }
+  .cv__contact { display: flex; flex-wrap: wrap; gap: var(--space-3); font-size: var(--text-sm); }
+  .cv__contact a { color: var(--color-accent); }
+  .cv__summary { margin-top: var(--space-5); max-width: 60ch; }
+  .cv__section { margin-top: var(--space-8); }
+  .cv__h2 {
+    font-size: var(--text-lg);
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: var(--space-2);
+    margin-bottom: var(--space-4);
+  }
+  .cv__projects { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-5); }
+  .cv__project { break-inside: avoid; }   /* don't split a project across an A4 page */
+  .cv__project-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+  .cv__project-title { margin: 0; font-size: var(--text-base); }
+  .cv__project-tags { color: var(--color-muted); font-size: var(--text-xs); }
+  .cv__project-summary { margin: var(--space-1) 0 0; color: var(--color-muted); }
+  .cv__actions { margin-top: var(--space-8); display: flex; align-items: center; gap: var(--space-5); }
+  .cv__back { color: var(--color-muted); font-size: var(--text-sm); }
+
+  /* hide screen-only controls in the printed PDF */
+  @media print {
+    .cv__no-print { display: none !important; }
+    .cv { padding: 0; }
+  }
+</style>
