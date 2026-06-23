@@ -5,8 +5,7 @@ different disciplines (currently software/web dev and AI/ML, adding quant dev in
 into one place. It comes with per-discipline views, a filterable skills section, and live 
 project demos.
 
-**Live link:** https://sebastianmorkel-com.pages.dev
-_(custom domain sebastianmorkel.com coming soon!)_
+**Live link:** https://sebastianmorkel.com/
 
 ## What it is
 
@@ -22,13 +21,13 @@ with a per-page accent.
 
 ## Tech stack
 
-- **[Astro](https://astro.build)** — static site generation
+- **[Astro](https://astro.build)** - static site generation
 - **TypeScript** (strict)
-- **Content Collections** — type-safe, tagged project & skill data
-- **CSS custom properties** — design tokens + two switchable themes
-- **Vitest** — schema-guard & filter tests
-- **Cloudflare Pages** — hosting + CI (push to deploy from git)
-- **pnpm** — package manager
+- **Content Collections** - type-safe, tagged project & skill data
+- **CSS custom properties** - design tokens + two switchable themes
+- **Vitest** - schema-guard & filter tests
+- **Cloudflare Pages** - hosting + CI (push to deploy from git)
+- **pnpm** - package manager
 
 ## Local development
 
@@ -65,5 +64,4 @@ public/          # static assets (demo media, …)
 
 ## Status
 
-In active development. Discipline pages, skills, and project demos are live with per-discipline CVs
-and the custom-domain cutover being in progress.
+Completed (Future updates may be made to add new pages etc.).
