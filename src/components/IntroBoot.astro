@@ -1,0 +1,151 @@
+---
+---
+<!-- runs in place, before the rest of the page paints -->
+<script is:inline>
+  try {
+    if (!sessionStorage.getItem("introSeen") &&
+        !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.documentElement.classList.add("intro-playing");
+    }
+  } catch (e) {}
+</script>
+
+<div class="intro" role="dialog" aria-label="Intro animation">
+  <button class="intro__skip" type="button">skip ▸</button>
+  <pre class="intro__screen" aria-hidden="true"></pre>
+  <p class="intro__prompt" hidden>press <kbd>enter</kbd> to continue <span class="intro__cursor">▋</span></p>
+</div>
+
+<style>
+  .intro { display: none; }
+  :global(html.intro-playing) { overflow: hidden; }
+  :global(html.intro-playing) .intro {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-mono);
+    padding: clamp(1rem, 5vw, 3rem);
+    cursor: pointer;
+  }
+  .intro__skip {
+    position: absolute;
+    top: var(--space-5); right: var(--space-5);
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+  }
+  .intro__skip:hover { color: var(--color-accent); border-color: var(--color-accent); }
+  .intro__screen {
+    margin: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.15rem;
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    white-space: pre-wrap;
+    text-shadow: var(--shadow-glow);
+  }
+  .intro__prompt { margin: 0; color: var(--color-muted); }
+  .intro kbd {
+    font-family: var(--font-mono);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 0 0.3em;
+    color: var(--color-fg);
+  }
+  .intro__cursor { color: var(--color-accent); animation: intro-blink 1s steps(1) infinite; }
+  @keyframes intro-blink { 50% { opacity: 0; } }
+  .intro--out { opacity: 0; transition: opacity 0.45s ease; }
+
+  /* line styles (JS-injected, so :global) */
+  .intro__screen :global(.intro__pfx) { color: var(--color-accent); }
+  .intro__screen :global(.dim) { color: var(--color-muted); }
+  .intro__screen :global(.ok)  { color: #34d399; }
+  .intro__screen :global(.bar) { color: var(--color-accent); letter-spacing: 1px; }
+</style>
+
+<script>
+  const el = document.querySelector<HTMLElement>(".intro");
+  if (el) {
+    if (!document.documentElement.classList.contains("intro-playing")) {
+      el.remove(); // not this session's first visit (or reduced-motion) → no intro
+    } else {
+      const screen = el.querySelector<HTMLElement>(".intro__screen")!;
+      const promptEl = el.querySelector<HTMLElement>(".intro__prompt")!;
+      const skipBtn = el.querySelector<HTMLButtonElement>(".intro__skip")!;
+      let done = false;
+      const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+      async function typeLine(text: string, prefix = "") {
+        const line = document.createElement("div");
+        if (prefix) {
+          const p = document.createElement("span");
+          p.className = "intro__pfx";
+          p.textContent = prefix;
+          line.appendChild(p);
+        }
+        const span = document.createElement("span");
+        line.appendChild(span);
+        screen.appendChild(line);
+        for (const ch of text) { span.textContent += ch; await sleep(32); }
+      }
+      const printLine = (html: string) => {
+        const line = document.createElement("div");
+        line.innerHTML = html;
+        screen.appendChild(line);
+      };
+
+      function finish() {
+        if (done) return;
+        done = true;
+        try { sessionStorage.setItem("introSeen", "1"); } catch (e) {}
+        el!.classList.add("intro--out");
+        setTimeout(() => {
+          document.documentElement.classList.remove("intro-playing");
+          window.scrollTo(0, 0);                                       // land at the top, nav in view
+          el!.remove();
+        }, 450);
+      }
+
+      async function run() {
+        await sleep(350);
+        await typeLine("ssh guest@sebastianmorkel.com", "$ ");
+        await sleep(280);
+        printLine('<span class="dim">connecting…</span> <span class="ok">ok</span>');
+        await sleep(420);
+        await typeLine("./portfolio --launch", "$ ");
+        await sleep(220);
+        printLine('<span class="dim">loading modules</span>');
+        printLine('&nbsp;&nbsp;[<span class="bar">██████████</span>] projects');
+        await sleep(160);
+        printLine('&nbsp;&nbsp;[<span class="bar">██████████</span>] skills');
+        await sleep(160);
+        printLine('&nbsp;&nbsp;[<span class="bar">██████████</span>] cv');
+        await sleep(280);
+        printLine('<span class="dim">booting interface…</span>');
+        await sleep(380);
+        printLine('<span class="ok">ready.</span>');
+        await sleep(320);
+        promptEl.hidden = false; // "press [enter]"
+      }
+
+      el.addEventListener("click", finish);
+      skipBtn.addEventListener("click", finish);
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === "Escape") finish();
+      });
+      run();
+    }
+  }
+</script>

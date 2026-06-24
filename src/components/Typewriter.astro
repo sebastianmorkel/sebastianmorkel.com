@@ -1,0 +1,44 @@
+---
+interface Props { phrases: string[]; }
+const { phrases } = Astro.props;
+---
+<span class="tw" data-tw data-phrases={JSON.stringify(phrases)}>
+  <span class="tw__text"></span><span class="tw__cursor" aria-hidden="true">▋</span>
+</span>
+
+<style>
+  .tw__cursor {
+    display: inline-block;
+    margin-left: 1px;
+    color: var(--color-accent);
+    animation: tw-blink 1s steps(1) infinite;
+  }
+  @keyframes tw-blink { 50% { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .tw__cursor { animation: none; } }
+</style>
+
+<script>
+  function initTypewriter(el: HTMLElement) {
+    const phrases: string[] = JSON.parse(el.dataset.phrases || "[]");
+    const textEl = el.querySelector<HTMLElement>(".tw__text");
+    if (!phrases.length || !textEl) return;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      textEl.textContent = phrases[0];
+      return;
+    }
+
+    let pi = 0, ci = 0, deleting = false;
+    function tick() {
+      const phrase = phrases[pi];
+      ci += deleting ? -1 : 1;
+      textEl!.textContent = phrase.slice(0, ci);
+      let delay = deleting ? 40 : 90;
+      if (!deleting && ci === phrase.length) { delay = 1600; deleting = true; }
+      else if (deleting && ci === 0) { deleting = false; pi = (pi + 1) % phrases.length; delay = 350; }
+      setTimeout(tick, delay);
+    }
+    tick();
+  }
+  document.querySelectorAll<HTMLElement>("[data-tw]").forEach(initTypewriter);
+</script>

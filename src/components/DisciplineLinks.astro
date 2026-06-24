@@ -1,0 +1,54 @@
+---
+const disciplines = [
+  { label: "AI / ML",   href: "/ai",          blurb: "Models, LLM tools & data",   accent: "#22d3ee" },
+  { label: "Software",  href: "/softwaredev", blurb: "Full-stack & systems",       accent: "#a78bfa" },
+  { label: "Web",       href: "/webdev",      blurb: "Fast, accessible sites",     accent: "#34d399" },
+];
+---
+<nav class="disciplines" aria-label="Browse by discipline">
+  {disciplines.map((d) => (
+    <a class="disc" href={d.href} style={`--disc-accent: ${d.accent}`}>
+      <span class="disc__cmd">&gt; {d.label}</span>
+      <span class="disc__blurb">{d.blurb}</span>
+      <span class="disc__arrow" aria-hidden="true">→</span>
+    </a>
+  ))}
+</nav>
+
+<style>
+  .disciplines {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+    gap: var(--space-4);
+  }
+  .disc {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    color: var(--color-fg);
+    transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+  }
+  .disc:hover {
+    text-decoration: none;
+    border-color: var(--disc-accent);
+    box-shadow: 0 0 14px color-mix(in srgb, var(--disc-accent) 30%, transparent);
+    transform: translateY(-2px);
+  }
+  .disc__cmd { font-family: var(--font-heading); font-weight: var(--weight-bold); color: var(--disc-accent); }
+  .disc__blurb { color: var(--color-muted); font-size: var(--text-sm); }
+  .disc__arrow {
+    position: absolute;
+    top: var(--space-5);
+    right: var(--space-5);
+    color: var(--disc-accent);
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity var(--transition), transform var(--transition);
+  }
+  .disc:hover .disc__arrow { opacity: 1; transform: translateX(0); }
+</style>

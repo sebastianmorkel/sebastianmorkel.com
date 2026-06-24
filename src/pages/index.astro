@@ -8,6 +8,9 @@ import { getCollection } from "astro:content";
 import ProjectCard from "../components/ProjectCard.astro";
 import SkillsMarquee from "../components/SkillsMarquee.astro";
 import Button from "../components/Button.astro";
+import DisciplineLinks from "../components/DisciplineLinks.astro";
+import Typewriter from "../components/Typewriter.astro";
+import IntroBoot from "../components/IntroBoot.astro";
 
 
 // Auto-detect an optional headshot at src/assets/headshot.{jpg,jpeg,png,webp}.
@@ -33,6 +36,7 @@ const projects = (await getCollection("projects"))
   );
 ---
 <BaseLayout title="Sebastian Morkel - Software · Web · AI/ML">
+  <IntroBoot />
   <Header />
 
   <Section>
@@ -54,7 +58,10 @@ const projects = (await getCollection("projects"))
       <div class="hero__body">
         <p class="hero__prompt">$ whoami</p>
         <h1 class="hero__name">Sebastian Morkel</h1>
-        <p class="hero__tagline">Software developer · web · AI/ML</p>
+        <p class="hero__tagline">
+          <span class="hero__chev" aria-hidden="true">&gt;</span>
+          <Typewriter phrases={["software developer", "web developer", "AI / ML engineer"]} />
+        </p>
         <p class="hero__blurb">
           I build practical software across the stack! From full web apps to AI-driven
           tools. This is where my projects, skills, and writing live.
@@ -62,9 +69,16 @@ const projects = (await getCollection("projects"))
         <nav class="hero__links" aria-label="Profiles">
           {profiles.map((p) => <Link href={p.href}>{p.label}</Link>)}
         </nav>
+        <p class="hero__status">
+          <span class="hero__dot" aria-hidden="true"></span>
+          Currently: BSc Applied Mathematics @ Stellenbosch · <span class="hero__open">open to internships</span>
+        </p>
       </div>
     </div>
   </Section>
+  <Section title="Explore">
+    <DisciplineLinks />
+  </Section>  
   <Section title="Projects">
     <div class="home-projects">
       {projects.map((e) => (
@@ -136,4 +150,27 @@ const projects = (await getCollection("projects"))
     grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr));
     gap: var(--space-4);
   }
+  .hero__chev { color: var(--color-accent); margin-right: 0.25rem; }
+  .hero__status {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-5);
+    color: var(--color-muted);
+    font-size: var(--text-sm);
+  }
+  .hero__open { color: #34d399; }            /* "available" green */
+  .hero__dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: #34d399;
+    animation: status-pulse 2s ease-out infinite;
+  }
+  @keyframes status-pulse {
+    0%   { box-shadow: 0 0 0 0 color-mix(in srgb, #34d399 55%, transparent); }
+    70%  { box-shadow: 0 0 0 7px color-mix(in srgb, #34d399 0%, transparent); }
+    100% { box-shadow: 0 0 0 0 color-mix(in srgb, #34d399 0%, transparent); }
+  }
+  @media (prefers-reduced-motion: reduce) { .hero__dot { animation: none; } }
 </style>
