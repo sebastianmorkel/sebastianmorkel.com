@@ -9,7 +9,7 @@
   disciplines: [ai, softwaredev, quant]
   level: advanced
 - id: java
-  name: java
+  name: Java
   category: Languages
   disciplines: [softwaredev]
   level: proficient

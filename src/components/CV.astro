@@ -1,14 +1,14 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Skills from "./Skills.astro";
 import Button from "./Button.astro";
 import { getCollection } from "astro:content";
+import { getSkillsByDiscipline } from "../lib/skills";
 
 type Discipline = "ai" | "softwaredev" | "webdev" | "quant";
 
 interface Props {
   discipline: Discipline;
-  title: string;     // e.g. "Software Developer"
+  title: string; // e.g. "Software Developer"
   summary: string;
 }
 
@@ -20,7 +20,38 @@ const projects = all
   .filter((e) => e.data.disciplines.includes(discipline) && e.data.status === "live")
   .sort((a, b) => +new Date(b.data.date) - +new Date(a.data.date));
 
-// Contact = profile links only, no plaintext email.
+// Skills for this discipline, grouped by category → Canva-style inline lines.
+const toData = (items: any[]): { name: string; category: string }[] =>
+  items.map((it) => (it && typeof it === "object" && "data" in it ? it.data : it));
+const skillList = toData(await getSkillsByDiscipline(discipline));
+const skillsByCategory = new Map<string, string[]>();
+for (const s of skillList) {
+  skillsByCategory.set(s.category, [...(skillsByCategory.get(s.category) ?? []), s.name]);
+}
+const skillCategories = [...skillsByCategory.entries()];
+
+// Static CV content shared across every discipline (Education + Experience).
+// Edit here to keep the on-site CV in step with the printed one.
+const education = [
+  {
+    org: "Stellenbosch University",
+    date: "Jan 2026 – Present",
+    detail: "BSc (Mathematical Sciences) — Focal Area: Applied Mathematics",
+    points: ["Majors: Applied Mathematics, Computer Science"],
+  },
+];
+const experience = [
+  {
+    role: "Freelance Website Design & Development",
+    date: "Feb 2024 – Present",
+    points: [
+      "Designed and developed 10+ websites for small-to-medium businesses, owning each project end-to-end (client communication, design, development, deployment).",
+      "Applied SEO techniques that ranked multiple client sites on the first page of Google for targeted keywords.",
+    ],
+  },
+];
+
+// Contact = location + profile links only, no plaintext email.
 const profiles = [
   { label: "LinkedIn", href: "https://www.linkedin.com/in/sebastianmorkel" },
   { label: "GitHub", href: "https://github.com/sebastianmorkel" },
@@ -28,39 +59,74 @@ const profiles = [
 ];
 
 const pdfHref = `/cv/${discipline}.pdf`;
+const year = (d: Date | string) => new Date(d).getFullYear();
 ---
 <BaseLayout title={`Sebastian Morkel — ${title} CV`} theme="editorial">
   <article class="cv">
     <header class="cv__header">
-      <div>
+      <p class="cv__meta cv__meta--left">Cape Town, South Africa</p>
+      <div class="cv__identity">
         <h1 class="cv__name">Sebastian Morkel</h1>
         <p class="cv__role">{title}</p>
       </div>
-      <nav class="cv__contact" aria-label="Contact">
+      <nav class="cv__meta cv__meta--right" aria-label="Contact">
         {profiles.map((p) => <a href={p.href}>{p.label}</a>)}
       </nav>
     </header>
 
-    <p class="cv__summary">{summary}</p>
+    {summary && <p class="cv__summary">{summary}</p>}
 
     <section class="cv__section">
-      <h2 class="cv__h2">Skills</h2>
-      <Skills discipline={discipline} />
+      <h2 class="cv__h2">Education</h2>
+      {education.map((e) => (
+        <div class="cv__entry">
+          <div class="cv__entry-head">
+            <h3 class="cv__entry-title">{e.org}</h3>
+            <span class="cv__entry-date">{e.date}</span>
+          </div>
+          <p class="cv__entry-sub">{e.detail}</p>
+          <ul class="cv__points" role="list">
+            {e.points.map((pt) => <li>{pt}</li>)}
+          </ul>
+        </div>
+      ))}
+    </section>
+
+    <section class="cv__section">
+      <h2 class="cv__h2">Professional Experience</h2>
+      {experience.map((e) => (
+        <div class="cv__entry">
+          <div class="cv__entry-head">
+            <h3 class="cv__entry-title">{e.role}</h3>
+            <span class="cv__entry-date">{e.date}</span>
+          </div>
+          <ul class="cv__points" role="list">
+            {e.points.map((pt) => <li>{pt}</li>)}
+          </ul>
+        </div>
+      ))}
     </section>
 
     <section class="cv__section">
       <h2 class="cv__h2">Projects</h2>
-      <ul class="cv__projects" role="list">
-        {projects.map((e) => (
-          <li class="cv__project">
-            <div class="cv__project-head">
-              <h3 class="cv__project-title">{e.data.title}</h3>
-              <span class="cv__project-tags">{e.data.disciplines.join(" · ")}</span>
-            </div>
-            <p class="cv__project-summary">{e.data.summary}</p>
-          </li>
+      {projects.map((e) => (
+        <div class="cv__entry">
+          <div class="cv__entry-head">
+            <h3 class="cv__entry-title">{e.data.title}</h3>
+            <span class="cv__entry-date">{year(e.data.date)}</span>
+          </div>
+          <p class="cv__entry-summary">{e.data.summary}</p>
+        </div>
+      ))}
+    </section>
+
+    <section class="cv__section">
+      <h2 class="cv__h2">Technical Skills</h2>
+      <div class="cv__skills">
+        {skillCategories.map(([cat, names]) => (
+          <p class="cv__skills-line"><strong>{cat}:</strong> {names.join(", ")}</p>
         ))}
-      </ul>
+      </div>
     </section>
 
     <p class="cv__actions cv__no-print">
@@ -71,44 +137,105 @@ const pdfHref = `/cv/${discipline}.pdf`;
 </BaseLayout>
 
 <style>
-  .cv { max-width: 48rem; margin-inline: auto; padding: var(--space-8) var(--space-5); }
+  .cv {
+    --cv-accent: #2e4a7a; /* navy — matches the printed CV; tweak here to recolour */
+    max-width: 48rem;
+    margin-inline: auto;
+    padding: var(--space-8) var(--space-5);
+    line-height: 1.45; /* tighter than the site default so the CV fits one page */
+  }
+
+  /* ---- Header: contact · NAME · links ---- */
   .cv__header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
     gap: var(--space-4);
-    flex-wrap: wrap;
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 2px solid var(--color-fg);
     padding-bottom: var(--space-4);
   }
-  .cv__name { margin: 0; }
-  .cv__role { margin: var(--space-1) 0 0; color: var(--color-muted); }
-  .cv__contact { display: flex; flex-wrap: wrap; gap: var(--space-3); font-size: var(--text-sm); }
-  .cv__contact a { color: var(--color-accent); }
-  .cv__summary { margin-top: var(--space-5); max-width: 60ch; }
-  .cv__section { margin-top: var(--space-8); }
-  .cv__h2 {
-    font-size: var(--text-lg);
-    border-bottom: 1px solid var(--color-border);
-    padding-bottom: var(--space-2);
-    margin-bottom: var(--space-4);
+  .cv__identity { text-align: center; }
+  .cv__name {
+    margin: 0;
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--cv-accent);
   }
-  .cv__projects { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-5); }
-  .cv__project { break-inside: avoid; }   /* don't split a project across an A4 page */
-  .cv__project-head {
+  .cv__role { margin: var(--space-1) 0 0; color: var(--color-muted); font-size: var(--text-sm); }
+  .cv__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+  }
+  .cv__meta--left { align-items: flex-start; }
+  .cv__meta--right { align-items: flex-end; text-align: right; }
+  .cv__meta a { color: var(--color-fg); }
+  .cv__meta a:hover { color: var(--cv-accent); }
+
+  .cv__summary { margin-top: var(--space-4); max-width: 62ch; color: var(--color-fg); }
+
+  /* ---- Sections ---- */
+  .cv__section { margin-top: var(--space-5); }
+  .cv__h2 {
+    margin: 0 0 var(--space-4);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--cv-accent);
+    border-bottom: 1px solid var(--color-fg);
+    padding-bottom: var(--space-2);
+  }
+
+  /* ---- Entries (education / experience / projects) ---- */
+  .cv__entry { margin-bottom: var(--space-3); break-inside: avoid; }
+  .cv__entry:last-child { margin-bottom: 0; }
+  .cv__entry-head {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
     gap: var(--space-3);
-    flex-wrap: wrap;
   }
-  .cv__project-title { margin: 0; font-size: var(--text-base); }
-  .cv__project-tags { color: var(--color-muted); font-size: var(--text-xs); }
-  .cv__project-summary { margin: var(--space-1) 0 0; color: var(--color-muted); }
+  .cv__entry-title { margin: 0; font-size: var(--text-base); font-weight: var(--weight-bold); }
+  .cv__entry-date {
+    color: var(--color-fg);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    white-space: nowrap;
+  }
+  .cv__entry-sub { margin: var(--space-1) 0 0; color: var(--color-fg); font-size: var(--text-sm); }
+  .cv__entry-summary { margin: var(--space-2) 0 0; color: var(--color-fg); }
+  .cv__points {
+    margin: var(--space-2) 0 0;
+    padding-left: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+  .cv__points li { color: var(--color-fg); }
+
+  /* ---- Skills: inline category lines (Languages: a, b, c) ---- */
+  .cv__skills { display: flex; flex-direction: column; gap: var(--space-2); }
+  .cv__skills-line { margin: 0; }
+  .cv__skills-line strong { color: var(--color-fg); }
+
+  /* ---- Actions (screen only) ---- */
   .cv__actions { margin-top: var(--space-8); display: flex; align-items: center; gap: var(--space-5); }
   .cv__back { color: var(--color-muted); font-size: var(--text-sm); }
 
-  /* hide screen-only controls in the printed PDF */
+  /* ---- Responsive: stack the header on narrow screens ---- */
+  @media (max-width: 600px) {
+    .cv__header { grid-template-columns: 1fr; }
+    .cv__identity { text-align: left; }
+    .cv__meta--right { align-items: flex-start; text-align: left; }
+  }
+
+  /* ---- Print / PDF ---- */
   @media print {
     .cv__no-print { display: none !important; }
     .cv { padding: 0; }
