@@ -101,6 +101,20 @@
     rgba(0, 0, 0, 0.20) 2px,
     rgba(0, 0, 0, 0.20) 3px
   );
+  animation: crt-flicker 7s ease-in-out infinite;   /* living screen: slow breathe + occasional flicker */
+}
+
+@keyframes crt-flicker {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.9; }        /* gentle phosphor breathe */
+  41%, 43% { opacity: 0.78; }       /* quick flicker */
+  42%      { opacity: 0.97; }
+  87%, 89% { opacity: 0.75; }       /* quick flicker */
+  88%      { opacity: 0.95; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="terminal"] body::after { animation: none; }
 }
 
 /* ---------- Reset + base element styling (token-driven) ---------- */
