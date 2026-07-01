@@ -98,19 +98,35 @@
     to bottom,
     transparent 0,
     transparent 2px,
-    rgba(0, 0, 0, 0.20) 2px,
-    rgba(0, 0, 0, 0.20) 3px
+    rgba(0, 0, 0, 0.26) 2px,
+    rgba(0, 0, 0, 0.26) 3px
   );
-  animation: crt-flicker 7s ease-in-out infinite;   /* living screen: slow breathe + occasional flicker */
+  animation: crt-flicker 4s linear infinite;   /* active, unstable-CRT flicker */
 }
 
+/* Irregular quick opacity dips — the screen "flickers" without any moving band. */
 @keyframes crt-flicker {
-  0%, 100% { opacity: 1; }
-  50%      { opacity: 0.9; }        /* gentle phosphor breathe */
-  41%, 43% { opacity: 0.78; }       /* quick flicker */
-  42%      { opacity: 0.97; }
-  87%, 89% { opacity: 0.75; }       /* quick flicker */
-  88%      { opacity: 0.95; }
+  0%   { opacity: 1; }
+  7%   { opacity: 1; }
+  8%   { opacity: 0.70; }
+  9%   { opacity: 1; }
+  21%  { opacity: 1; }
+  22%  { opacity: 0.58; }
+  23%  { opacity: 0.95; }
+  24%  { opacity: 1; }
+  38%  { opacity: 1; }
+  39%  { opacity: 0.72; }
+  40%  { opacity: 1; }
+  54%  { opacity: 0.90; }
+  56%  { opacity: 0.55; }
+  57%  { opacity: 1; }
+  71%  { opacity: 1; }
+  72%  { opacity: 0.64; }
+  73%  { opacity: 0.97; }
+  74%  { opacity: 1; }
+  88%  { opacity: 0.76; }
+  90%  { opacity: 1; }
+  100% { opacity: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
