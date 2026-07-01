@@ -56,9 +56,11 @@ describe("real seed content", () => {
     expect(titles("quant")).not.toContain("AI Budget Coach");
   });
 
-  it("the in-development stub is the only in-development project", () => {
+  it("splits real projects by status without leaking in-dev into the live set", () => {
+    const live = filterByStatus(realProjects, "live");
     const inDev = filterByStatus(realProjects, "in-development");
-    expect(inDev).toHaveLength(1);
-    expect(inDev[0].data.title).toBe("sebastianmorkel.com");
+    expect(live.length).toBeGreaterThan(0); // CVs + discipline pages need shipped work
+    const liveTitles = new Set(live.map((p) => p.data.title));
+    for (const p of inDev) expect(liveTitles.has(p.data.title)).toBe(false);
   });
 });
