@@ -76,8 +76,7 @@ const projects = (await getCollection("projects"))
           {profiles.map((p) => <Link href={p.href}>{p.label}</Link>)}
         </nav>
         <p class="hero__status">
-          <span class="hero__dot" aria-hidden="true"></span>
-          Currently: BSc Applied Mathematics @ Stellenbosch · <span class="hero__open">open to internships</span>
+          <span class="hero__dot" aria-hidden="true"></span>Currently: BSc Applied Mathematics @ Stellenbosch <span class="hero__open">· open to internships</span>
         </p>
       </div>
     </div>
@@ -159,19 +158,20 @@ const projects = (await getCollection("projects"))
   }
   .hero__chev { color: var(--color-accent); margin-right: 0.25rem; }
   .hero__status {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
     margin-top: var(--space-5);
     color: var(--color-muted);
     font-size: var(--text-sm);
+    line-height: var(--leading-normal);
   }
-  .hero__open { color: #34d399; }            /* "available" green */
+  .hero__open { color: #34d399; white-space: nowrap; }   /* "available" green — keep the phrase on one line */
   .hero__dot {
+    display: inline-block;
     width: 0.5rem;
     height: 0.5rem;
+    margin-right: var(--space-2);
     border-radius: 50%;
     background: #34d399;
+    vertical-align: middle;
     animation: status-pulse 2s ease-out infinite;
   }
   @keyframes status-pulse {
