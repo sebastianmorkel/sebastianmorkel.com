@@ -5,7 +5,7 @@ date: 2026-07-01
 disciplines: [softwaredev, webdev, ai]
 status: live
 links:
-  github: https://github.com/sebastianmorkel/bag-learning-technical-take-home
+  github: https://github.com/sebastianmorkel/study-activity-dashboard
 demo:
   mode: none
 featured: true
@@ -19,4 +19,4 @@ A full-stack "Study Activity Dashboard" that lets a learning officer see how act
 - Built the frontend in **React** + **TypeScript** + **Tailwind** (Vite), using **TanStack Query** for data fetching and cache invalidation, **Recharts** for the activity chart, and a sortable table with real submit UX (in-flight disabling, toasts, error recovery).
 - Added an "At a glance" **LLM summary** endpoint that computes the numbers in SQL and has **Google's Gemini** only reword them, with a graceful templated fallback so the API degrades cleanly instead of failing when the model is unavailable.
 
-Source: [github.com/sebastianmorkel/bag-learning-technical-take-home](https://github.com/sebastianmorkel/bag-learning-technical-take-home)
+Source: [github.com/sebastianmorkel/study-activity-dashboard](https://github.com/sebastianmorkel/study-activity-dashboard)
