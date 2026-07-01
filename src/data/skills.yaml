@@ -98,3 +98,23 @@
   name: Playwright
   category: Tools
   disciplines: [softwaredev, webdev]
+- id: docker
+  name: Docker
+  category: Tools
+  disciplines: [softwaredev, webdev, ai]
+  level: proficient
+- id: pydantic
+  name: Pydantic
+  category: Frameworks
+  disciplines: [softwaredev, ai, webdev]
+  level: proficient
+- id: vite
+  name: Vite
+  category: Tools
+  disciplines: [webdev, softwaredev]
+  level: proficient
+- id: tanstack-query
+  name: TanStack Query
+  category: Frameworks
+  disciplines: [webdev, softwaredev]
+  level: proficient
