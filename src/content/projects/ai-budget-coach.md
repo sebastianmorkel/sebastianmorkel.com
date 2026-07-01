@@ -2,7 +2,10 @@
 title: AI Budget Coach
 summary: A full-stack budgeting web app that turns income and expenses into interactive charts and AI-generated financial insights, with secure per-user data.
 date: 2026-06-18
-disciplines: [ai, softwaredev, webdev]
+disciplines:
+  - ai
+  - softwaredev
+  - webdev
 tech:
   - Next.js
   - TypeScript
