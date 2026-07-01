@@ -1,5 +1,5 @@
 import { defineCollection, z } from "astro:content";
-import { glob, file } from "astro/loaders";
+import { glob } from "astro/loaders";
 
 // One shared vocabulary for disciplines
 const DISCIPLINES = ["ai", "softwaredev", "webdev", "quant"] as const;
@@ -57,7 +57,7 @@ export const skillSchema = z.object({
 });
 
 const skills = defineCollection({
-    loader: file("src/data/skills.yaml"),
+    loader: glob({ pattern: "**/*.yml", base: "./src/data/skills" }),
     schema: skillSchema,
 });
 

@@ -60,3 +60,26 @@ collections:
           - { name: poster, label: Poster path, widget: string, required: false }
       - { name: featured, label: Featured, widget: boolean, default: false }
       - { name: body, label: Body (Markdown), widget: markdown, required: false }
+
+  - name: skills
+    label: Skills
+    label_singular: Skill
+    folder: src/data/skills
+    create: true
+    extension: yml
+    format: yaml
+    identifier_field: name
+    slug: "{{slug}}"
+    fields:
+      - { name: name, label: Name, widget: string }
+      - name: category
+        label: Category
+        widget: string
+        hint: "Existing: Languages, Frameworks, Environments, Tools, Concepts, Platforms"
+      - name: disciplines
+        label: Disciplines
+        widget: select
+        multiple: true
+        min: 1
+        options: [ai, softwaredev, webdev, quant]
+      - { name: level, label: Level, widget: select, options: [familiar, proficient, advanced], required: false }

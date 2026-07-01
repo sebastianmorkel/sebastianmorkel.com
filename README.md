@@ -49,7 +49,7 @@ src/
   layouts/       # BaseLayout - theme + accent plumbing
   components/    # token-driven UI (cards, tags, demo, skills, …)
   content/       # projects/*.md + content.config.ts (Zod schemas)
-  data/          # skills.yaml
+  data/          # skills/ (one .yml file per skill)
   lib/           # discipline/status filter helpers
   styles/        # global.css - design tokens + terminal/editorial palettes
 public/          # static assets (demo media, …)
@@ -60,7 +60,9 @@ public/          # static assets (demo media, …)
 - **A project:** drop a Markdown file in `src/content/projects/` with `disciplines`, a `status`
   (`live` / `in-development` / `planned`), and an optional `demo` block. It appears automatically
   on every discipline (page) that is tagged.
-- **A skill:** add an entry to `src/data/skills.yaml` with its `category` and `disciplines`.
+- **A skill:** add a `.yml` file in `src/data/skills/` with `name`, `category`, and `disciplines`.
+
+Either can also be added/edited visually at **`/admin`** (Sveltia CMS — sign in with GitHub; edits commit to this repo and auto-deploy).
 
 ## Status
 

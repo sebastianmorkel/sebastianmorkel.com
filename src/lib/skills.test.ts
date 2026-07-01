@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll } from "vitest";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { parse } from "yaml";
 import { filterSkillsByDiscipline, type SkillLike, type Discipline } from "./skills";
@@ -23,13 +23,15 @@ describe("skills filter logic (fixtures)", () => {
   });
 });
 
-// the real skills.yaml
-describe("real skills.yaml", () => {
+// the real skills data (one file per skill)
+describe("real skills data", () => {
   let realSkills: SkillLike[];
 
   beforeAll(() => {
-    const raw = parse(readFileSync(join(process.cwd(), "src/data/skills.yaml"), "utf8")) as SkillLike["data"][];
-    realSkills = raw.map((s) => ({ data: s }));
+    const dir = join(process.cwd(), "src/data/skills");
+    realSkills = readdirSync(dir)
+      .filter((f) => f.endsWith(".yml"))
+      .map((f) => ({ data: parse(readFileSync(join(dir, f), "utf8")) as SkillLike["data"] }));
   });
 
   it("a multi-tagged skill (Python) appears under each of its disciplines and NOT others", () => {
