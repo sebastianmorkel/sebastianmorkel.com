@@ -12,6 +12,10 @@ backend:
 media_folder: "public/uploads"
 public_folder: "/uploads"
 
+# Custom branding — shows on the login screen, editor header, and browser tab.
+logo:
+  src: /web-app-manifest-512x512.png
+
 collections:
   - name: projects
     label: Projects
