@@ -1,0 +1,62 @@
+# Sveltia CMS configuration — https://sveltiacms.app
+# Edits made in /admin are committed straight to this repo; Cloudflare Pages
+# then rebuilds and publishes. No database, no server.
+
+backend:
+  name: github
+  repo: sebastianmorkel/sebastianmorkel.com
+  branch: main
+  base_url: https://sveltia-cms-auth.morkel082.workers.dev
+
+# Where images uploaded through the CMS are stored (served from the site root).
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+collections:
+  - name: projects
+    label: Projects
+    label_singular: Project
+    folder: src/content/projects
+    create: true
+    extension: md
+    format: frontmatter
+    identifier_field: title
+    slug: "{{slug}}"
+    fields:
+      - { name: title, label: Title, widget: string }
+      - { name: summary, label: Summary, widget: text }
+      - { name: date, label: Date, widget: datetime, date_format: "YYYY-MM-DD", time_format: false }
+      - name: disciplines
+        label: Disciplines
+        widget: select
+        multiple: true
+        min: 1
+        options: [ai, softwaredev, webdev, quant]
+      - name: tech
+        label: Tech
+        widget: list
+        required: false
+        hint: "One technology per item, e.g. FastAPI, PostgreSQL, React"
+      - { name: status, label: Status, widget: select, options: [live, in-development, planned], default: live }
+      - name: links
+        label: Links
+        widget: object
+        required: false
+        collapsed: true
+        hint: "Leave blank if none. Must be full URLs (https://…)."
+        fields:
+          - { name: github, label: GitHub URL, widget: string, required: false }
+          - { name: site, label: Site URL, widget: string, required: false }
+      - name: demo
+        label: Demo
+        widget: object
+        collapsed: true
+        hint: "recorded → set Video; embed → set Embed URL; link → set Open-app URL"
+        fields:
+          - { name: mode, label: Mode, widget: select, options: [none, embed, link, recorded], default: none }
+          - { name: embedUrl, label: Embed URL, widget: string, required: false }
+          - { name: url, label: Open-app URL, widget: string, required: false }
+          - { name: video, label: Video path, widget: string, required: false }
+          - { name: poster, label: Poster path, widget: string, required: false }
+      - { name: featured, label: Featured, widget: boolean, default: false }
+      - { name: body, label: Body (Markdown), widget: markdown, required: false }
