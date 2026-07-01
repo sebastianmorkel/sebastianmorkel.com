@@ -3,6 +3,14 @@ title: Study Activity Dashboard
 summary: A full-stack internal dashboard that reads student study activity from Postgres and presents per-student stats, a gap-free 14-day activity chart, and an LLM-generated "at a glance" summary.
 date: 2026-07-01
 disciplines: [softwaredev, webdev, ai]
+tech:
+  - FastAPI
+  - PostgreSQL
+  - Docker
+  - React
+  - TypeScript
+  - TanStack Query
+  - Google Gemini API
 status: live
 demo:
   mode: none

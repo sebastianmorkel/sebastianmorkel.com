@@ -3,6 +3,11 @@ title: Personal Portfolio
 summary: A statically-generated portfolio and skills hub built with Astro. One tagged content source that populates filtered discipline pages, a skills explorer, and auto-generated PDF CVs.
 date: 2026-06-22
 disciplines: [webdev,softwaredev]
+tech:
+  - Astro
+  - TypeScript
+  - Cloudflare Pages
+  - Playwright
 status: live
 demo:
   mode: link

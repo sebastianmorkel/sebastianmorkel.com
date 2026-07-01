@@ -13,6 +13,7 @@ export const projectSchema = z.object({
     summary: z.string(),
     date: z.coerce.date(),
     disciplines,
+    tech: z.array(z.string()).default([]),          // per-project stack (display + CV tech line)
     status: z.enum(["live", "in-development", "planned"]).default("live"),
     links: z.record(z.string(), z.string().url()).optional(),   // e.g. { github: "...", site: "..." }
 
