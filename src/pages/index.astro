@@ -69,6 +69,9 @@ const projects = (await getCollection("projects"))
           I build practical software across the stack! From full web apps to AI-driven
           tools. This is where my projects, skills, and writing live.
         </p>
+        <p class="hero__cta">
+          <Button href="/cv/sebastian-morkel-cv.pdf">Download CV ↓</Button>
+        </p>
         <nav class="hero__links" aria-label="Profiles">
           {profiles.map((p) => <Link href={p.href}>{p.label}</Link>)}
         </nav>
@@ -147,6 +150,7 @@ const projects = (await getCollection("projects"))
   .hero__name { margin: 0 0 var(--space-2); }
   .hero__tagline { margin: 0 0 var(--space-4); color: var(--color-muted); }
   .hero__blurb { max-width: 46ch; }
+  .hero__cta { margin-top: var(--space-5); }  
   .hero__links { display: flex; gap: var(--space-5); margin-top: var(--space-5); }
   .home-projects {
     display: grid;
