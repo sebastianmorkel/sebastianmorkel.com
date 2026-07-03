@@ -2,7 +2,9 @@
 title: Personal Portfolio
 summary: A statically-generated portfolio and skills hub built with Astro. One tagged content source that populates filtered discipline pages, a skills explorer, and auto-generated PDF CVs.
 date: 2026-06-22
-disciplines: [webdev,softwaredev]
+disciplines:
+  - webdev
+  - softwaredev
 tech:
   - Astro
   - TypeScript
@@ -15,7 +17,7 @@ demo:
 featured: true
 ---
 
-This site itself — a fast, content-driven portfolio I designed and built from scratch.
+This site itself! a fast, content-driven portfolio I designed and built from scratch.
 
 - Built as a statically-generated site in **Astro** + **TypeScript (strict)**, deployed with **Cloudflare Pages** with push-to-deploy CI.
 - Authored every project and skill as a single **tagged content collection** (Zod-validated), so each entry is only written once and automatically surfaces on each discipline it's tagged with (and no duplications).
