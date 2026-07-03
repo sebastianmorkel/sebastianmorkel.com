@@ -24,5 +24,6 @@ This site itself! a fast, content-driven portfolio I designed and built from scr
 - Designed a **token-based design system** with two switchable themes. A terminal / amber-CRT aesthetic and a clean editorial theme. All from one shared component set.
 - Generated downloadable **per-discipline PDF CVs at build time** by rendering the live CV pages with headless Chromium/Playwright in CI.
 - Configured the custom domain, DNS, and automatic HTTPS on Cloudflare.
+- Wired up **Sveltia CMS (Git-backed)** so content can be edited through a UI via an admin panel from **any device** without touching the repo directly.
 
 Source: [github.com/sebastianmorkel/sebastianmorkel.com](https://github.com/sebastianmorkel/sebastianmorkel.com)
