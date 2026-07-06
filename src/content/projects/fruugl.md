@@ -10,9 +10,7 @@ tech:
   - PostgreSQL
   - Supabase
 status: in-development
-links:
-  github: ''
-  site: https://everyrand.pages.dev
+links: null
 demo:
   mode: link
   embedUrl: ''
