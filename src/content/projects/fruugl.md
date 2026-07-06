@@ -10,12 +10,8 @@ tech:
   - PostgreSQL
   - Supabase
 status: in-development
-links: null
 demo:
   mode: link
-  embedUrl: ''
   url: https://everyrand.pages.dev
-  video: ''
-  poster: ''
 featured: true
 ---

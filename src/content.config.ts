@@ -8,6 +8,11 @@ const disciplines = z.array(z.enum(DISCIPLINES)).min(1);
 
 // Projects: Markdown files in src/content/projects/*.md
 
+// Sveltia CMS writes untouched optional fields as `null` (objects) or `""`
+// (strings) instead of omitting them — normalize both to `undefined` so they
+// fall through to `.optional()` rather than failing schema validation.
+const blank = (v: unknown) => (v === null || v === "" ? undefined : v);
+
 export const projectSchema = z.object({
     title: z.string(),
     summary: z.string(),
@@ -15,16 +20,16 @@ export const projectSchema = z.object({
     disciplines,
     tech: z.array(z.string()).default([]),          // per-project stack (display + CV tech line)
     status: z.enum(["live", "in-development", "planned"]).default("live"),
-    links: z.record(z.string(), z.string().url()).optional(),   // e.g. { github: "...", site: "..." }
+    links: z.preprocess(blank, z.record(z.string(), z.string().url()).optional()),   // e.g. { github: "...", site: "..." }
 
     media: z.array(z.string()).optional(),           // image/asset paths
     demo: z
         .object({
             mode: z.enum(["embed", "link", "recorded", "none"]),
-            embedUrl: z.string().url().optional(), // iframe src for `embed`
-            url: z.string().url().optional(),      // open-full-app / `link` target
-            video: z.string().optional(),          // recorded walkthrough, e.g. "/demo/coach.mp4"
-            poster: z.string().optional(),         // screenshot, e.g. "/demo/coach.jpg"
+            embedUrl: z.preprocess(blank, z.string().url().optional()), // iframe src for `embed`
+            url: z.preprocess(blank, z.string().url().optional()),      // open-full-app / `link` target
+            video: z.preprocess(blank, z.string().optional()),          // recorded walkthrough, e.g. "/demo/coach.mp4"
+            poster: z.preprocess(blank, z.string().optional()),         // screenshot, e.g. "/demo/coach.jpg"
         })
         .default({ mode: "none" })
         // mode/data consistency — a mismatch FAILS the build (protects future entries)

@@ -47,7 +47,7 @@ collections:
         widget: object
         required: false
         collapsed: true
-        hint: "Leave blank if none. Must be full URLs (https://…)."
+        hint: "Optional — if you don't have a GitHub or Site link, don't open this section at all. Any field you do fill in must be a full URL starting with https://."
         fields:
           - { name: github, label: GitHub URL, widget: string, required: false }
           - { name: site, label: Site URL, widget: string, required: false }
@@ -55,7 +55,7 @@ collections:
         label: Demo
         widget: object
         collapsed: true
-        hint: "recorded → set Video; embed → set Embed URL; link → set Open-app URL"
+        hint: "Mode decides which field below is required — fill in ONLY that one and leave the rest empty: none → nothing; embed → Embed URL; link → Open-app URL; recorded → Video (Poster optional). Embed URL and Open-app URL must be full https:// URLs."
         fields:
           - { name: mode, label: Mode, widget: select, options: [none, embed, link, recorded], default: none }
           - { name: embedUrl, label: Embed URL, widget: string, required: false }
